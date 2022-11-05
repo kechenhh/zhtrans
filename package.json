@@ -2,7 +2,7 @@
   "name": "zhtrans",
   "displayName": "zhtrans",
   "description": "",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "kechenhh",
   "engines": {
     "vscode": "^1.73.0"
@@ -51,6 +51,11 @@
           "type": "string",
           "default": "D:\\zh.json",
           "description": "读取文件的路径"
+        },
+        "zhtrans.freeTrans": {
+          "type": "boolean",
+          "default": false,
+          "description": "随机转换写入"
         }
       }
     }
@@ -61,14 +66,17 @@
     "test": "node ./test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.73.0",
     "@types/glob": "^8.0.0",
     "@types/mocha": "^10.0.0",
     "@types/node": "16.x",
+    "@types/vscode": "^1.73.0",
+    "@vscode/test-electron": "^2.2.0",
     "eslint": "^8.26.0",
     "glob": "^8.0.3",
     "mocha": "^10.1.0",
-    "typescript": "^4.8.4",
-    "@vscode/test-electron": "^2.2.0"
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "pinyin-pro": "^3.11.0"
   }
 }

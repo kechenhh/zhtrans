@@ -1,27 +1,32 @@
 {
-  "name": "firstvs",
-  "displayName": "firstvs",
+  "name": "zhtrans",
+  "displayName": "zhtrans",
   "description": "",
   "version": "0.0.1",
+  "publisher": "kechenhh",
   "engines": {
     "vscode": "^1.73.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
   },
   "categories": [
     "Other"
   ],
   "activationEvents": [
-    "onCommand:firstvs.transHTML",
-    "onCommand:firstvs.transJS"
+    "onCommand:zhtrans.transHTML",
+    "onCommand:zhtrans.transJS"
   ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "firstvs.transHTML",
+        "command": "zhtrans.transHTML",
         "title": "transHTML"
       },
       {
-        "command": "firstvs.transJS",
+        "command": "zhtrans.transJS",
         "title": "transJS"
       }
     ]

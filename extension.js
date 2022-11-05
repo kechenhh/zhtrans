@@ -1,6 +1,5 @@
 const vscode = require('vscode');
 const fs = require('fs');
-const path = require('path');
 const dir = 'D:\\zh.json';
 
 function read(dir) {
@@ -29,7 +28,7 @@ function findKeyByValue(obj, value) {
 
 function activate(context) {
 
-	let disposable1 = vscode.commands.registerCommand("firstvs.transHTML", async function () {
+	let disposable1 = vscode.commands.registerCommand("zhtrans.transHTML", async function () {
 		//获取文本
 		const text = await read(dir)
 		const { activeTextEditor } = vscode.window // 获取当前聚焦的文本编辑器
@@ -51,7 +50,7 @@ function activate(context) {
 
 
 	});
-	let disposable2 = vscode.commands.registerCommand('firstvs.transJS', function () {
+	let disposable2 = vscode.commands.registerCommand('zhtrans.transJS', function () {
 
 		const { activeTextEditor } = vscode.window // 获取当前聚焦的文本编辑器
 		// activeTextEditor!.selection 当前选中的范围

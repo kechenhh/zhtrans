@@ -2,7 +2,7 @@
   "name": "zhtrans",
   "displayName": "zhtrans",
   "description": "",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "kechenhh",
   "engines": {
     "vscode": "^1.73.0"
@@ -15,21 +15,35 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:zhtrans.transHTML",
-    "onCommand:zhtrans.transJS"
+    "onCommand:zhtrans.trh",
+    "onCommand:zhtrans.trj"
   ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "zhtrans.transHTML",
-        "title": "transHTML"
+        "command": "zhtrans.trh",
+        "title": "翻译html"
       },
       {
-        "command": "zhtrans.transJS",
-        "title": "transJS"
+        "command": "zhtrans.trj",
+        "title": "翻译js"
       }
-    ]
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "when": "editorHasSelection",
+          "command": "zhtrans.trh",
+          "group": "navigation"
+        },
+        {
+          "when": "editorHasSelection",
+          "command": "zhtrans.trj",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "lint": "eslint .",

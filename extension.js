@@ -39,14 +39,15 @@ function randomTxt(str) {
 
 //转换文字
 function transTxt(type, isMatch, word) {
-	let pushword = ''
+	let pushWord = ''
+	let frontWord = 'AgencyNum'
 	if (type == 'html') {
-		pushword = `{{$t("${isMatch ? word : randomTxt(word)}")}}`
+		pushWord = `{{$t("${isMatch ? word : frontWord + '.' + randomTxt(word)}")}}`
 	} else if (type == 'js') {
-		pushword = `this.$t("${isMatch ? word : randomTxt(word)}")`
+		pushWord = `this.$t("${isMatch ? word : frontWord + '.' + randomTxt(word)}")`
 	}
 	activeTextEditor.edit(editBuilder => {
-		editBuilder.replace(activeTextEditor.selection, pushword)
+		editBuilder.replace(activeTextEditor.selection, pushWord)
 	})
 }
 

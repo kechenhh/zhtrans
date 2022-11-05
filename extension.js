@@ -1,13 +1,13 @@
 const vscode = require('vscode');
 const fs = require('fs');
-const dir = 'D:\\zh.json';
+const dir = vscode.workspace.getConfiguration('zhtrans').get('readDir')
 
 //读取文本
 function read(dir) {
 	return new Promise((resolve, reject) => {
 		fs.readFile(dir, 'utf-8', (err, data) => {
 			if (err) {
-				vscode.window.showInformationMessage('D盘下存放zh.json');
+				vscode.window.showInformationMessage('zh.json文件读取失败');
 				return
 			} else {
 				resolve(data)
@@ -32,7 +32,8 @@ async function main(type) {
 	const text = await read(dir)
 	const { activeTextEditor } = vscode.window // 获取当前聚焦的文本编辑器
 	// 根据范围获取选中文本 // activeTextEditor.selection 当前选中的范围
-	const currentSelect = activeTextEditor.document.getText(activeTextEditor.selection)
+	let currentSelect = activeTextEditor.document.getText(activeTextEditor.selection)
+	currentSelect = currentSelect.replace(/"/g, '').replace(/'/g, '').trim()
 	//json  to obj
 	let obj = JSON.parse(text)
 	let transWord = findKeyByValue(obj, currentSelect)
@@ -40,7 +41,7 @@ async function main(type) {
 	if (transWord) {
 		let pushword = ''
 		if (type == 'html') {
-			pushword = `$t("${transWord}")`
+			pushword = `{{$t("${transWord}")}}`
 		} else if (type == 'js') {
 			pushword = `this.$t("${transWord}")`
 		}

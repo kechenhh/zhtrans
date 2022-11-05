@@ -43,6 +43,16 @@
           "group": "navigation"
         }
       ]
+    },
+    "configuration": {
+      "title": "zhtrans",
+      "properties": {
+        "zhtrans.readDir": {
+          "type": "string",
+          "default": "D:\\zh.json",
+          "description": "读取文件的路径"
+        }
+      }
     }
   },
   "scripts": {

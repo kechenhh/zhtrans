@@ -10,14 +10,19 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:firstvs.helloWorld"
+    "onCommand:firstvs.transHTML",
+    "onCommand:firstvs.transJS"
   ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "firstvs.helloWorld",
-        "title": "Hello World"
+        "command": "firstvs.transHTML",
+        "title": "transHTML"
+      },
+      {
+        "command": "firstvs.transJS",
+        "title": "transJS"
       }
     ]
   },

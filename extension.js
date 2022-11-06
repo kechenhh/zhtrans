@@ -72,7 +72,9 @@ async function main(type) {
 	} else {
 		if (freeTrans) {
 			transTxt(type, false, currentSelect)
-			sendText = `${currentSelect} 随机！`
+			//写入剪贴板
+			vscode.env.clipboard.writeText(currentSelect)
+			sendText = `${currentSelect} 随机并写入剪贴板！`
 		} else {
 			sendText = `${currentSelect} 翻译失败！`
 		}

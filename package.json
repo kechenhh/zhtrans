@@ -2,7 +2,7 @@
   "name": "zhtrans",
   "displayName": "zhtrans",
   "description": "",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "publisher": "kechenhh",
   "engines": {
     "vscode": "^1.73.0"

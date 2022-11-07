@@ -2,7 +2,6 @@ const vscode = require('vscode');
 const fs = require('fs');
 const dir = vscode.workspace.getConfiguration('zhtrans').get('readDir')
 const { pinyin } = require('pinyin-pro');
-const { activeTextEditor } = vscode.window // 获取当前聚焦的文本编辑器
 
 //读取文本
 function read(dir) {
@@ -38,23 +37,25 @@ function randomTxt(str) {
 }
 
 //转换文字
-function transTxt(type, isMatch, word) {
+function transTxt(type, isMatch, word, callback) {
 	let pushWord = ''
-	let frontWord = 'AgencyNum'
+	let frontWord = vscode.workspace.getConfiguration('zhtrans').get('AgencyNum')
 	if (type == 'html') {
 		pushWord = `{{$t("${isMatch ? word : frontWord + '.' + randomTxt(word)}")}}`
 	} else if (type == 'js') {
 		pushWord = `this.$t("${isMatch ? word : frontWord + '.' + randomTxt(word)}")`
 	}
-	activeTextEditor.edit(editBuilder => {
-		editBuilder.replace(activeTextEditor.selection, pushWord)
-	})
+	callback(pushWord)
+
 }
 
 async function main(type) {
 	//获取文本
 	const text = await read(dir)
-	// 根据范围获取选中文本 // activeTextEditor.selection 当前选中的范围
+
+	const { activeTextEditor } = vscode.window // 获取当前聚焦的文本编辑器
+	// 根据范围获取选中文本 
+	// activeTextEditor.selection 当前选中的范围
 	let currentSelect = activeTextEditor.document.getText(activeTextEditor.selection)
 
 	currentSelect = currentSelect.replace(/"/g, '').replace(/'/g, '').trim()
@@ -62,16 +63,25 @@ async function main(type) {
 	let obj = JSON.parse(text)
 	let transWord = findKeyByValue(obj, currentSelect)
 	//随机转换写入状态
-	const freeTrans = vscode.workspace.getConfiguration('zhtrans').get('freeTrans') || false
+	const freeTrans = vscode.workspace.getConfiguration('zhtrans').get('freeTrans')
 	let sendText = ''
 	//转换
 	if (transWord) {
 		//匹配成功
-		transTxt(type, true, transWord)
+		transTxt(type, true, transWord, (data) => {
+			activeTextEditor.edit(editBuilder => {
+				editBuilder.replace(activeTextEditor.selection, data)
+			})
+		})
 		sendText = `${currentSelect} 翻译成功！`
 	} else {
 		if (freeTrans) {
-			transTxt(type, false, currentSelect)
+			transTxt(type, false, currentSelect,
+				(data) => {
+					activeTextEditor.edit(editBuilder => {
+						editBuilder.replace(activeTextEditor.selection, data)
+					})
+				})
 			//写入剪贴板
 			vscode.env.clipboard.writeText(currentSelect)
 			sendText = `${currentSelect} 随机并写入剪贴板！`

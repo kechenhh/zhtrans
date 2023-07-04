@@ -62,7 +62,17 @@
           "default": "D:\\zh.json",
           "description": "读取文件的路径"
         },
+        "zhtrans.writeDir": {
+          "type": "string",
+          "default": "D:\\zhw.json",
+          "description": "写入文件的路径"
+        },
         "zhtrans.freeTrans": {
+          "type": "boolean",
+          "default": false,
+          "description": "随机转换"
+        },
+        "zhtrans.transWrite": {
           "type": "boolean",
           "default": false,
           "description": "随机转换写入"

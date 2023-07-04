@@ -1,6 +1,7 @@
 const vscode = require('vscode');
 const fs = require('fs');
 const dir = vscode.workspace.getConfiguration('zhtrans').get('readDir')
+const writeDir = vscode.workspace.getConfiguration('zhtrans').get('writeDir')
 const { pinyin } = require('pinyin-pro');
 
 //读取文本
@@ -45,10 +46,28 @@ function transTxt(type, isMatch, word, callback) {
 		trh: `{{$t("${trsName}")}}`,
 		trj: `this.$t("${trsName}")`,
 		trLabel: `:label = "\`\${$t('${trsName}')}：\`"`,
-	}[type])
+	}[type], trsName)
 
 }
+async function wirteFun(currentSelect, trsName) {
+	let model = trsName.split('.')[0]
+	let info = trsName.split('.')[1]
 
+	//获取文本
+	let ZHtext = await read(writeDir)
+	let fileObj = JSON.parse(ZHtext)
+
+	if (!fileObj.hasOwnProperty(model)) {
+		fileObj[model] = {};
+	}
+	fileObj[model][info] = currentSelect;
+	let inStr = JSON.stringify(fileObj)
+
+	fs.writeFile(writeDir, inStr, err => {
+		if (err) return
+		vscode.window.showInformationMessage(`${currentSelect} 随机并写入文件！`);
+	})
+}
 async function main(type) {
 	//获取文本
 	const text = await read(dir)
@@ -69,7 +88,7 @@ async function main(type) {
 	//json  to obj
 	let obj = JSON.parse(text)
 	let transWord = findKeyByValue(obj, currentSelect)
-	//随机转换写入状态
+	//随机转换状态
 	const freeTrans = vscode.workspace.getConfiguration('zhtrans').get('freeTrans')
 	let sendText = ''
 	//转换
@@ -84,10 +103,15 @@ async function main(type) {
 	} else {
 		if (freeTrans) {
 			transTxt(type, false, currentSelect,
-				(data) => {
+				(data, trsName) => {
 					activeTextEditor.edit(editBuilder => {
 						editBuilder.replace(activeTextEditor.selection, data)
 					})
+					// 随机转换写入
+					const transWrite = vscode.workspace.getConfiguration('zhtrans').get('transWrite')
+					if (transWrite) {
+						wirteFun(currentSelect, trsName)
+					}
 				})
 			//写入剪贴板
 			vscode.env.clipboard.writeText(currentSelect)

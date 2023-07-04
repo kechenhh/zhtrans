@@ -2,7 +2,7 @@
   "name": "zhtrans",
   "displayName": "zhtrans",
   "description": "",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "publisher": "kechenhh",
   "engines": {
     "vscode": "^1.70.0"
@@ -16,18 +16,23 @@
   ],
   "activationEvents": [
     "onCommand:zhtrans.trh",
-    "onCommand:zhtrans.trj"
+    "onCommand:zhtrans.trj",
+    "onCommand:zhtrans.trLabel"
   ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
       {
         "command": "zhtrans.trh",
-        "title": "翻译html"
+        "title": "国际化-{{$t{'model.info'}}}"
       },
       {
         "command": "zhtrans.trj",
-        "title": "翻译js"
+        "title": "国际化-this.$t(\"model.info\")"
+      },
+      {
+        "command": "zhtrans.trLabel",
+        "title": "翻译label"
       }
     ],
     "menus": {
@@ -40,6 +45,11 @@
         {
           "when": "editorHasSelection",
           "command": "zhtrans.trj",
+          "group": "navigation"
+        },
+        {
+          "when": "editorHasSelection",
+          "command": "zhtrans.trLabel",
           "group": "navigation"
         }
       ]
@@ -68,7 +78,8 @@
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
-    "test": "node ./test/runTest.js"
+    "test": "node ./test/runTest.js",
+    "pkg": "vsce package"
   },
   "devDependencies": {
     "@types/glob": "^8.0.0",

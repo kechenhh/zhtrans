@@ -38,14 +38,14 @@ function randomTxt(str) {
 
 //转换文字
 function transTxt(type, isMatch, word, callback) {
-	let pushWord = ''
+	// 前缀
 	let frontWord = vscode.workspace.getConfiguration('zhtrans').get('AgencyNum')
-	if (type == 'html') {
-		pushWord = `{{$t("${isMatch ? word : frontWord + '.' + randomTxt(word)}")}}`
-	} else if (type == 'js') {
-		pushWord = `this.$t("${isMatch ? word : frontWord + '.' + randomTxt(word)}")`
-	}
-	callback(pushWord)
+	let trsName = isMatch ? word : frontWord + '.' + randomTxt(word)
+	callback({
+		trh: `{{$t("${trsName}")}}`,
+		trj: `this.$t("${trsName}")`,
+		trLabel: `:label = "\`\${$t('${trsName}')}：\`"`,
+	}[type])
 
 }
 
@@ -57,8 +57,15 @@ async function main(type) {
 	// 根据范围获取选中文本 
 	// activeTextEditor.selection 当前选中的范围
 	let currentSelect = activeTextEditor.document.getText(activeTextEditor.selection)
-
-	currentSelect = currentSelect.replace(/"/g, '').replace(/'/g, '').trim()
+	if (type == 'trj' || type == 'trLabel') {
+		// 匹配引号中内容
+		const regex = /(['"])(.*?)\1/g;
+		let match;
+		while ((match = regex.exec(currentSelect)) !== null) {
+			const matchedValue = match[2];
+			currentSelect = matchedValue
+		}
+	}
 	//json  to obj
 	let obj = JSON.parse(text)
 	let transWord = findKeyByValue(obj, currentSelect)
@@ -90,18 +97,17 @@ async function main(type) {
 		}
 	}
 	vscode.window.showInformationMessage(sendText);
-
 }
 
+// 命令
 function activate(context) {
-	let disposable1 = vscode.commands.registerCommand("zhtrans.trh", function () {
-		main('html')
-	});
-
-	let disposable2 = vscode.commands.registerCommand('zhtrans.trj', function () {
-		main('js')
-	});
-	context.subscriptions.push(disposable1, disposable2);
+	context.subscriptions.push(...[
+		'trh', 'trj', 'trLabel'
+	].map(item => {
+		return vscode.commands.registerCommand('zhtrans.' + item, function () {
+			main(item)
+		});
+	}));
 }
 
 function deactivate() { }
